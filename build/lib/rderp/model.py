@@ -4,18 +4,20 @@ from pyrdo.value import *
 def model_queryData(token="EDCFD199-AF57-4591-8BA9-CD44415B816B", FFormId='BD_MATERIAL', Ftype='head',
                     FEntityName='', FListCount=0, FActionName='Save'):
     app = RdClient(token=token)
+    FOwnerName = app.ownerName()
     sql_head = "select FNodeName,FMainKey,FAuxKey,FDefaultValue,FDataType,FValueType  from t_api_erp_kdc"
     sql_where = "  where  Ftype ='" + Ftype + "'  and FEntityName ='" + FEntityName + "' and FIsShow =1  and FListCount = " + str(
         FListCount) + " and FFormId = '"
-    sql_all = sql_head + sql_where + FFormId + "'  and FActionName ='" + FActionName + "'"
+    sql_all = sql_head + sql_where + FFormId + "'  and FActionName ='" + FActionName + "' and FOwnerName ='"+FOwnerName+"'"
     # print(sql_all)
     data = app.select(sql=sql_all)
     return (data)
 def model_queryMeta(token="EDCFD199-AF57-4591-8BA9-CD44415B816B",FFormId = 'BD_MATERIAL', FMainKey ='FIssueType',FActionName ='Save'):
     app = RdClient(token=token)
+    FOwnerName = app.ownerName()
     sql_head = " select  FNodeName,FEntityName,FListCount,FMainKey,FAuxKey,Ftype,FDataType,FValueType from  t_api_erp_kdc  "
     sql_where = "  where   FIsShow =1  and FMainKey ='"+FMainKey+"' and FFormId = '"
-    sql_all = sql_head + sql_where + FFormId + "'  and FActionName ='" + FActionName + "'"
+    sql_all = sql_head + sql_where + FFormId + "'  and FActionName ='" + FActionName + "' and FOwnerName ='"+FOwnerName+"'"
     #print(sql_all)
     data = app.select(sql=sql_all)
     return(data)
@@ -53,17 +55,19 @@ def model_setValue(option,token="EDCFD199-AF57-4591-8BA9-CD44415B816B",FFormId =
     return(option)
 def model_BodySheet(token="EDCFD199-AF57-4591-8BA9-CD44415B816B",FFormId = 'BD_MATERIAL',Ftype ='entry',FActionName ='Save'):
     app = RdClient(token=token)
+    FOwnerName = app.ownerName()
     sql_head = "select  distinct FEntityName  from  t_api_erp_kdc"
     sql_where = "  where  Ftype ='"+Ftype+"'   and FFormId = '"
-    sql_all = sql_head + sql_where + FFormId + "'  and FActionName ='" + FActionName + "'"
+    sql_all = sql_head + sql_where + FFormId + "'  and FActionName ='" + FActionName + "' and FOwnerName ='"+FOwnerName+"'"
     # print(sql_all)
     data = app.select(sql=sql_all)
     return(data)
 def model_tailCount(token="EDCFD199-AF57-4591-8BA9-CD44415B816B",FFormId = 'BD_MATERIAL',Ftype ='entryList',FEntityName ='FEntityAuxPty',FActionName ='Save',):
     app = RdClient(token=token)
+    FOwnerName = app.ownerName()
     sql_head = "  select distinct FListCount  from t_api_erp_kdc"
     sql_where = "  where  Ftype ='"+Ftype+"'  and FEntityName ='"+FEntityName+"'  and FIsShow =1  and FFormId = '"
-    sql_all = sql_head + sql_where + FFormId + "'  and FActionName ='" + FActionName + "'"
+    sql_all = sql_head + sql_where + FFormId + "'  and FActionName ='" + FActionName + "' and FOwnerName ='"+FOwnerName+"'"
     # print(sql_all)
     data = app.select(sql=sql_all)
     return(data)
@@ -179,19 +183,21 @@ class Model():
         self.FEntityName = FEntityName
         self.FListCount = FListCount
         app = RdClient(token=self.token)
+        FOwnerName = app.ownerName()
         sql_head = "select FNodeName,FMainKey,FAuxKey,FDefaultValue,FDataType,FValueType  from t_api_erp_kdc"
         sql_where = "  where  Ftype ='" + self.Ftype + "'  and FEntityName ='" + self.FEntityName + "' and FIsShow =1  and FListCount = " + str(
             self.FListCount) + " and FFormId = '"
-        sql_all = sql_head + sql_where + self.FFormId + "'  and FActionName ='" + self.FActionName + "'"
+        sql_all = sql_head + sql_where + self.FFormId + "'  and FActionName ='" + self.FActionName + "' and FOwnerName ='"+FOwnerName+"'"
         # print(sql_all)
         data = app.select(sql=sql_all)
         return (data)
     def queryMeta(self,FMainKey='FIssueType'):
         self.FMainKey = FMainKey
         app = RdClient(token=self.token)
+        FOwnerName = app.ownerName()
         sql_head = " select  FNodeName,FEntityName,FListCount,FMainKey,FAuxKey,Ftype,FDataType,FValueType from  t_api_erp_kdc  "
         sql_where = "  where   FIsShow =1  and FMainKey ='" + self.FMainKey + "' and FFormId = '"
-        sql_all = sql_head + sql_where + self.FFormId + "'  and FActionName ='" + self.FActionName + "'"
+        sql_all = sql_head + sql_where + self.FFormId + "'  and FActionName ='" + self.FActionName + "' and FOwnerName ='"+FOwnerName+"'"
         # print(sql_all)
         data = app.select(sql=sql_all)
         return (data)
@@ -235,9 +241,10 @@ class Model():
     def bodySheet(self,Ftype='entry'):
         self.Ftype = Ftype
         app = RdClient(token=self.token)
+        FOwnerName = app.ownerName()
         sql_head = "select  distinct FEntityName  from  t_api_erp_kdc"
         sql_where = "  where  Ftype ='" + self.Ftype + "'   and FFormId = '"
-        sql_all = sql_head + sql_where + self.FFormId + "'  and FActionName ='" + self.FActionName + "'"
+        sql_all = sql_head + sql_where + self.FFormId + "'  and FActionName ='" + self.FActionName + "' and FOwnerName ='"+FOwnerName+"'"
         # print(sql_all)
         data = app.select(sql=sql_all)
         return (data)
@@ -250,9 +257,10 @@ class Model():
         '''
         self.Ftype = Ftype
         app = RdClient(token=self.token)
+        FOwnerName = app.ownerName()
         sql_head = "select  distinct FEntityName  from  t_api_erp_kdc"
         sql_where = "  where  Ftype ='" + self.Ftype + "'   and FFormId = '"
-        sql_all = sql_head + sql_where + self.FFormId + "'  and FActionName ='" + self.FActionName + "'"
+        sql_all = sql_head + sql_where + self.FFormId + "'  and FActionName ='" + self.FActionName + "' and FOwnerName ='"+FOwnerName+"'"
         # print(sql_all)
         data = app.select(sql=sql_all)
         return (data)
@@ -261,9 +269,10 @@ class Model():
         self.Ftype = Ftype
         self.FEntityName =FEntityName
         app = RdClient(token=self.token)
+        FOwnerName = app.ownerName()
         sql_head = "  select distinct FListCount  from t_api_erp_kdc"
         sql_where = "  where  Ftype ='" + self.Ftype + "'  and FEntityName ='" + self.FEntityName + "'  and FIsShow =1  and FFormId = '"
-        sql_all = sql_head + sql_where + self.FFormId + "'  and FActionName ='" + self.FActionName + "'"
+        sql_all = sql_head + sql_where + self.FFormId + "'  and FActionName ='" + self.FActionName + "' and FOwnerName ='"+FOwnerName+"'"
         # print(sql_all)
         data = app.select(sql=sql_all)
         return (data)
