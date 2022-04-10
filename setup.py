@@ -10,7 +10,7 @@ from setuptools import find_packages
 
 setup(
     name = 'rderp',
-    version = '1.3.0',
+    version = '1.3.1',
     install_requires=[
         'requests',
     ],

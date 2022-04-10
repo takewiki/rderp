@@ -68,6 +68,12 @@ def model_tailCount(token="EDCFD199-AF57-4591-8BA9-CD44415B816B",FFormId = 'BD_M
     data = app.select(sql=sql_all)
     return(data)
 def model_Item(node,i):
+    '''
+
+    :param node: means a head or a body row or  any one
+    :param i: metadata each row
+    :return:
+    '''
     valueType = i['FValueType']
     dataType = i['FDataType']
     value = i['FDefaultValue']
@@ -76,8 +82,17 @@ def model_Item(node,i):
     value = valueConverter(value, dataType)
     node[key] = valueWrapper(value, valueType, key2)
     return(node)
-def model_unity(data,option={} ,FEntityName ='',Ftype ='entryList'):
+def model_unity(data,option ,FEntityName ='',Ftype ='head'):
+    '''
+    model unity just used for head or entry with option as input
+    :param data:
+    :param option:
+    :param FEntityName:
+    :param Ftype:
+    :return:
+    '''
     ncount = len(data)
+    # node represent a head or a body row
     node = {}
     if ncount >0:
         for i in data:
@@ -85,25 +100,40 @@ def model_unity(data,option={} ,FEntityName ='',Ftype ='entryList'):
         #是否为表头
         if Ftype =='head':
             option["Model"] = node
-        elif Ftype =='entryList':
-            option = node
         else:
             option["Model"][FEntityName] = node
     else:
         pass
     return(option)
-def model_tailUnity(option={},token="EDCFD199-AF57-4591-8BA9-CD44415B816B",FFormId = 'BD_MATERIAL',Ftype='entryList',FEntityName ='FEntityAuxPty',FListCount=1,FActionName ='Save'):
+def model_unityNode(data,FEntityName ='',Ftype ='entryList'):
+    '''
+    model unityNode used for Entrylist without option as  input parameter
+    :param data:
+    :param FEntityName:
+    :param Ftype:
+    :return:
+    '''
+    ncount = len(data)
+    # node represent a head or a body row
+    node = {}
+    if ncount >0:
+        for i in data:
+            node = model_Item(node,i)
+    return(node)
+def model_tailUnity(token="EDCFD199-AF57-4591-8BA9-CD44415B816B",FFormId = 'BD_MATERIAL',Ftype='entryList',FEntityName ='FEntityAuxPty',FListCount=1,FActionName ='Save'):
     data = model_queryData(token=token, FFormId=FFormId, Ftype=Ftype,
                            FEntityName=FEntityName, FListCount=FListCount, FActionName=FActionName)
-    res = model_unity(data, option=option, FEntityName=FEntityName, Ftype=Ftype)
+    res = model_unityNode(data, FEntityName=FEntityName, Ftype=Ftype)
     return(res)
 def model_tail(option={},token="EDCFD199-AF57-4591-8BA9-CD44415B816B",FFormId = 'BD_MATERIAL',Ftype='entryList',FEntityName ='FEntityAuxPty',FActionName ='Save'):
     data = model_tailCount(token=token,FFormId=FFormId,Ftype=Ftype,FEntityName=FEntityName,FActionName=FActionName)
     ncount = len(data)
     if ncount >0:
+        #define the list
         res = []
         for i in data:
-            item = model_tailUnity(option={},token=token,FFormId=FFormId,Ftype=Ftype,FEntityName=FEntityName,FListCount=i['FListCount'],FActionName=FActionName)
+            # get the node for each list
+            item = model_tailUnity(token=token,FFormId=FFormId,Ftype=Ftype,FEntityName=FEntityName,FListCount=i['FListCount'],FActionName=FActionName)
             res.append(item)
         option['Model'][FEntityName] = res
     return(option)
@@ -249,7 +279,15 @@ class Model():
         self.node[key] = valueWrapper(value, valueType, key2)
         return (self.node)
 
-    def unity(self,data, option={}, FEntityName='', Ftype='entryList'):
+    def unity(self,data, option, FEntityName='', Ftype='entryList'):
+        '''
+        unity used for head or entry body with option as input.
+        :param data:
+        :param option:
+        :param FEntityName:
+        :param Ftype:
+        :return:
+        '''
         ncount = len(data)
         node = {}
         if ncount > 0:
@@ -258,26 +296,48 @@ class Model():
             # 是否为表头
             if Ftype == 'head':
                 option["Model"] = node
-            elif Ftype == 'entryList':
-                option = node
             else:
                 option["Model"][FEntityName] = node
-        else:
-            pass
         return (option)
+    def unityNode(self,data, FEntityName='', Ftype='entryList'):
+        '''
+        unitNode used for entryList without option as input parameters.s
+        :param data:
+        :param FEntityName:
+        :param Ftype:
+        :return:
+        '''
+        ncount = len(data)
+        node = {}
+        if ncount > 0:
+            for i in data:
+                node = model_Item(node, i)
+        return (node)
 
-    def tailUnity(self,option={},Ftype='entryList', FEntityName='FEntityAuxPty', FListCount=1):
+    def tailUnity(self,Ftype='entryList', FEntityName='FEntityAuxPty', FListCount=1):
+        '''
+        tail Unity means one row the property setting without option
+        :param Ftype:
+        :param FEntityName:
+        :param FListCount:
+        :return:
+        '''
         self.Ftype =Ftype
         self.FEntityName =FEntityName
         self.FListCount =FListCount
         data = self.queryData(Ftype=self.Ftype,FEntityName=self.FEntityName, FListCount=self.FListCount)
-        res = self.unity(data=data, option={}, FEntityName=self.FEntityName, Ftype=self.Ftype)
+        res = self.unityNode(data=data, FEntityName=self.FEntityName, Ftype=self.Ftype)
         return (res)
 
-    def tail(self,option={},  Ftype='entryList',FEntityName='FEntityAuxPty'):
+    def tail(self,option,  Ftype='entryList',FEntityName='FEntityAuxPty'):
+        '''
+        tail mean model tail part represent as a list object.
+        :param option:
+        :param Ftype:
+        :param FEntityName:
+        :return:
+        '''
         self.option = option
-        #print('bug3')
-        #print(self.option)
         self.Ftype = Ftype
         self.FEntityName =FEntityName
         data = self.tailCount(Ftype=self.Ftype, FEntityName=self.FEntityName)
@@ -285,7 +345,7 @@ class Model():
         if ncount > 0:
             res = []
             for i in data:
-                item = self.tailUnity(option={},Ftype=self.Ftype, FEntityName=self.FEntityName,
+                item = self.tailUnity(Ftype=self.Ftype, FEntityName=self.FEntityName,
                                        FListCount=i['FListCount'])
                 res.append(item)
             self.option['Model'][self.FEntityName] = res
