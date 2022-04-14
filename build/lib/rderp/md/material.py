@@ -63,6 +63,19 @@ class Material(ErpClient):
         res = ErpClient.Save(self,formid="BD_MATERIAL",data=data)
         return(res)
     def Save(self,data):
+        '''
+        Save option is new material without materialID.
+        :param data:
+        :return:
+        '''
+        res = ErpClient.Save(self,formid="BD_MATERIAL",data=data)
+        return(res)
+    def Modify(self,data):
+        '''
+        Modify is base on the Save option with aditional part is FMATERIALID
+        :param data:
+        :return:
+        '''
         res = ErpClient.Save(self,formid="BD_MATERIAL",data=data)
         return(res)
     def Query(self,FieldKeys="FName,FNumber",FilterString="FNumber in ('Webb2021083117391510001','Webb2021083117400510001','Webb2021083117401510001')",OrderString="",TopRowCount=0,StartRow=0,Limit=0):
