@@ -4,6 +4,7 @@ setup.py
 rderp/__init__.py
 rderp/main.py
 rderp/model.py
+rderp/model_func.py
 rderp.egg-info/PKG-INFO
 rderp.egg-info/SOURCES.txt
 rderp.egg-info/dependency_links.txt
